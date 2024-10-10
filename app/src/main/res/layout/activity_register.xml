@@ -46,7 +46,7 @@
                     android:textAlignment="center"
                     android:text="Sign Up"
                     android:textSize="22sp"
-                    android:fontFamily="@font/bmjua"
+                    android:fontFamily="@font/hancom_gothic_bold"
                     android:layout_marginBottom="5dp"
                     />
                 <EditText
@@ -93,7 +93,7 @@
                         android:background="@drawable/sign_up_back"
                         android:textColor="#484848"
                         android:layout_weight="3"
-                        android:fontFamily="@font/bmjua"
+                        android:fontFamily="@font/hancom_gothic_bold"
                         android:layout_marginLeft="3dp"
                         android:text="인증"/>
                 </LinearLayout>
@@ -107,7 +107,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
-                        android:textColor="@color/black"
+                        android:textColor="@color/gray"
                         android:layout_weight="1"
                         android:background="#00000000"
                         android:hint="인증코드"
@@ -177,7 +177,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
-                        android:textColor="@color/black"
+                        android:textColor="@color/gray"
                         android:layout_weight="1"
                         android:background="#00000000"
                         android:hint="비밀번호"
@@ -249,7 +249,7 @@
                     android:background="@drawable/sign_up_back"
                     android:textColor="#484848"
                     android:text="Sign Up"
-                    android:fontFamily="@font/bmjua"/>
+                    android:fontFamily="@font/hancom_gothic_bold"/>
             </LinearLayout>
 
         </LinearLayout>

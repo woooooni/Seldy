@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@color/seldy4"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:background="@color/seldy4"
+        >
+        <ImageButton
+            android:id="@+id/Rewrite_ibtn1"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:background="@drawable/pencil"
+            android:backgroundTint="@color/seldy3"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="self-develop"
+            android:textColor="@color/seldy3"
+            android:textStyle="bold"
+            android:fontFamily="@font/hancom_gothic_bold"
+            android:layout_marginHorizontal="100dp"
+            android:textSize="17dp" />
+
+        <ImageButton
+            android:id="@+id/setting_open"
+            android:layout_width="30dp"
+            android:layout_height="10dp"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:backgroundTint="@color/seldy3"
+            android:background="@drawable/setting" />
+
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/gray"
+        android:layout_below="@id/action_bar"/>
+</LinearLayout>

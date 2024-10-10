@@ -1,11 +1,13 @@
 package com.seldy_proj.seldy.acitiviy;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -17,6 +19,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 //import com.example.seldy_nawon.R;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.seldy_proj.seldy.util.Emailcheck;
 import com.seldy_proj.seldy.R;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -26,6 +33,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.seldy_proj.seldy.util.PreferenceManager;
+import com.seldy_proj.seldy.util.User;
 
 import java.util.HashMap;
 import java.util.regex.Matcher;
@@ -39,40 +48,48 @@ import javax.mail.SendFailedException;
 public class ActivityRegister extends AppCompatActivity {
 
     ImageView prev_btn;
-    TextView code_check, niknamec_text, pw_text, pwc_text;
-    EditText name, id, nikname, pw, pwc, email_check_code, tel;
-    ImageView email_icon, niknamec_icon, pw_icon, pwc_icon;
+    TextView code_check, nicknamec_text, pw_text, pwc_text;
+    EditText name, id, nickname, pw, pwc, email_check_code, tel;
+    ImageView email_icon, nicknamec_icon, pw_icon, pwc_icon;
     Button signUp, email_check_btn;
+    Context mContext;
     String code = null;
     boolean idc = false, pw_c = false, pwc_c = false;
     private DatabaseReference mDatabase;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().permitDiskReads().permitDiskWrites().permitNetwork().build());
-
+        mContext = this;
         // 파이어베이스 접근 설정
         mDatabase = FirebaseDatabase.getInstance().getReference();
         mAuth = FirebaseAuth.getInstance();
+        mFirestore = FirebaseFirestore.getInstance();
+
+        FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
+                .setPersistenceEnabled(true)
+                .build();
+        mFirestore.setFirestoreSettings(settings);
 
         prev_btn = findViewById(R.id.prev_btn);
         name = findViewById(R.id.register_name);
         id = findViewById(R.id.register_id);
-        nikname = findViewById(R.id.register_nickname);
+        nickname = findViewById(R.id.register_nickname);
         pw = findViewById(R.id.register_pw);
         pwc = findViewById(R.id.register_pwc);
         email_check_code = findViewById(R.id.email_check_code);
 
-        niknamec_text = findViewById(R.id.nickname_check);
+        nicknamec_text = findViewById(R.id.nickname_check);
         pw_text = findViewById(R.id.pw_check);
         pwc_text = findViewById(R.id.pwc_check);
         code_check = findViewById(R.id.code_check);
 
         // 아이콘들
-        niknamec_icon = findViewById(R.id.nikname_check_icon);
+        nicknamec_icon = findViewById(R.id.nikname_check_icon);
         pw_icon = findViewById(R.id.pw_check_icon);
         pwc_icon = findViewById(R.id.pwc_check_icon);
         email_icon = findViewById(R.id.email_check_icon);
@@ -94,11 +111,11 @@ public class ActivityRegister extends AppCompatActivity {
                 // 가입 정보 가져오기
                 String getUserName = name.getText().toString();
                 String getUserId = id.getText().toString();
-                String getUserNikname = nikname.getText().toString();
+                String getUserNickname = nickname.getText().toString();
                 String getUserPw = pw.getText().toString();
                 String getUserPwc = pwc.getText().toString();
 
-                if (getUserName.equals("") != true && getUserId.equals("") != true && getUserNikname.equals("") != true && getUserPw.equals("") != true && getUserPwc.equals("") != true) {
+                if (getUserName.equals("") != true && getUserId.equals("") != true && getUserNickname.equals("") != true && getUserPw.equals("") != true && getUserPwc.equals("") != true) {
                     if (idc != true) {
                         Toast.makeText(ActivityRegister.this, "아이디를 확인해주세요.", Toast.LENGTH_SHORT).show();
                     } else {
@@ -110,19 +127,30 @@ public class ActivityRegister extends AppCompatActivity {
                                 public void onComplete(@NonNull Task<AuthResult> task) {
                                     if (task.isSuccessful()) {
                                         FirebaseUser user = mAuth.getCurrentUser();
-                                        String userId = user.getEmail();
+                                        //String userId = user.getEmail();
                                         String uid = user.getUid();
-                                        String name = getUserName.trim();
-                                        String nikname = getUserNikname.trim();
-
+                                        //String name = getUserName.trim();
+                                        String nickname = getUserNickname.trim();
                                         HashMap<Object, String> saveProfile = new HashMap<>();
                                         saveProfile.put("uid", uid);
-                                        saveProfile.put("id", userId);
-                                        saveProfile.put("name", name);
-                                        saveProfile.put("nikname", nikname);
-
-                                        mDatabase.child("user").child(uid).setValue(saveProfile);
-
+                                        //saveProfile.put("id", userId);
+                                        //saveProfile.put("name", name);
+                                        saveProfile.put("nickname", nickname);
+                                        //mDatabase.child("user").child(uid).setValue(saveProfile);
+                                        mFirestore.collection("member").document(uid)
+                                                .set(saveProfile)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void unused) {
+                                                Toast.makeText(mContext,"성공",Toast.LENGTH_SHORT).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toast.makeText(mContext,"실패",Toast.LENGTH_SHORT).show();
+                                            }
+                                        });
                                         //가입이 되었으면 로그인 페이지로
                                         Toast.makeText(ActivityRegister.this, "가입되었습니다.", Toast.LENGTH_SHORT).show();
                                         Intent intent = new Intent(ActivityRegister.this, ActivityLogin.class);
@@ -135,8 +163,8 @@ public class ActivityRegister extends AppCompatActivity {
                             });
                         }
                     }
-
-                } else {
+                }
+                else {
                     Toast.makeText(ActivityRegister.this, "공백없이 입력해주세요.", Toast.LENGTH_SHORT).show();
                 }
 
@@ -168,7 +196,6 @@ public class ActivityRegister extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (email_check_code.getText().toString().equals(code)) {
@@ -182,7 +209,6 @@ public class ActivityRegister extends AppCompatActivity {
                     code_check.setText("일치하지 않는 코드입니다.");
                 }
             }
-
             @Override
             public void afterTextChanged(Editable s) {
 
@@ -270,7 +296,7 @@ public class ActivityRegister extends AppCompatActivity {
             }
         });
         // 닉네임 동적 확인
-        nikname.addTextChangedListener(new TextWatcher() {
+        nickname.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -278,20 +304,20 @@ public class ActivityRegister extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (nikname.getText().toString().matches("") != true) {
-                    String nikname_length = nikname.getText().toString();
+                if (nickname.getText().toString().matches("") != true) {
+                    String nikname_length = nickname.getText().toString();
                     if (nikname_length.length() < 4 || nikname_length.length() > 20) {
-                        niknamec_text.setTextColor(Color.parseColor("#FF7E7E"));
-                        niknamec_text.setText("4~20자 이내로 만들어주세요.");
-                        niknamec_icon.setImageResource(R.drawable.fail_icon);
+                        nicknamec_text.setTextColor(Color.parseColor("#FF7E7E"));
+                        nicknamec_text.setText("4~20자 이내로 만들어주세요.");
+                        nicknamec_icon.setImageResource(R.drawable.fail_icon);
 
                     } else {
-                        niknamec_text.setText("");
-                        niknamec_icon.setImageResource(R.drawable.success_icon);
+                        nicknamec_text.setText("");
+                        nicknamec_icon.setImageResource(R.drawable.success_icon);
                     }
                 } else {
-                    niknamec_text.setText("");
-                    niknamec_icon.setImageResource(R.drawable.register_border_solid);
+                    nicknamec_text.setText("");
+                    nicknamec_icon.setImageResource(R.drawable.register_border_solid);
                 }
             }
 

@@ -2,6 +2,8 @@ package com.seldy_proj.seldy.acitiviy;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
@@ -51,6 +53,7 @@ public class ActivityLogin extends AppCompatActivity {
                 }
             });
         }
+        //테스트
         id = findViewById(R.id.login_id);
         pw = findViewById(R.id.login_pw);
 
@@ -72,16 +75,16 @@ public class ActivityLogin extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if(task.isSuccessful()){
-                                    PreferenceManager.setString(mContext, "AutoLogin", "true");
-                                    PreferenceManager.setString(mContext, "Id", getId);
-                                    PreferenceManager.setString(mContext, "Pw", getPw);
-                                    Log.d("자동로그인 " , PreferenceManager.getString(mContext,"AutoLogin"));
-                                    Log.d("아이디 ", PreferenceManager.getString(mContext, "Id"));
-                                    Log.d("비밀번호 ", PreferenceManager.getString(mContext, "Pw"));
-                                    Toast.makeText(ActivityLogin.this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
-                                    Intent intent = new Intent(ActivityLogin.this, ActivityMain.class);
-                                    startActivity(intent);
-                                    finish();
+                                PreferenceManager.setString(mContext, "AutoLogin", "true");
+                                PreferenceManager.setString(mContext, "Id", getId);
+                                PreferenceManager.setString(mContext, "Pw", getPw);
+                                Log.d("자동로그인 " , PreferenceManager.getString(mContext,"AutoLogin"));
+                                Log.d("아이디 ", PreferenceManager.getString(mContext, "Id"));
+                                Log.d("비밀번호 ", PreferenceManager.getString(mContext, "Pw"));
+                                Toast.makeText(ActivityLogin.this, "로그인에 성공하였습니다.", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(ActivityLogin.this, ActivityMain.class);
+                                startActivity(intent);
+                                finish();
                             }else {
                                 Toast.makeText(ActivityLogin.this, "아이디 혹은 비밀번호가 틀렸습니다.", Toast.LENGTH_SHORT).show();
                             }
@@ -119,7 +122,6 @@ public class ActivityLogin extends AppCompatActivity {
                                 }
 
                             }
-
                         });
                     }
                 }

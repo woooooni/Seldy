@@ -11,7 +11,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Design.NoActionBar">
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity android:name="com.seldy_proj.seldy.acitiviy.ActivitySplash">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,6 +23,7 @@
         <activity android:name="com.seldy_proj.seldy.acitiviy.ActivityMain"/>
         <activity android:name="com.seldy_proj.seldy.acitiviy.Activity_Splash_Random1"/>
         <activity android:name="com.seldy_proj.seldy.acitiviy.Activity_Splash_Random2"/>
+        <activity android:name="com.seldy_proj.seldy.acitiviy.AppVersionActivity"/>
     </application>
 
 </manifest>

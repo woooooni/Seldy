@@ -20,7 +20,6 @@
                 android:layout_marginTop="20dp"
                 android:orientation="horizontal"
                 android:background="@drawable/b2">
-
                 <ImageView
                     android:id="@+id/email_icon"
                     android:layout_width="25dp"
@@ -88,7 +87,10 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentRight="true"
                     android:fontFamily="@font/hancom_gothic_regular"
-                    android:text="자동로그인"/>
+                    android:buttonTint="@color/white"
+                    android:text="자동로그인"
+                    android:textColor="@color/white"
+                    />
             </RelativeLayout>
 
             <LinearLayout
